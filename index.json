@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music App UI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  
+
+  <video autoplay muted loop id="bg-video">
+    <source src="videos/lofi wallpaper.mp4" type="video/mp4">
+  </video>
+
+  <header class="header glass">
+      <img src="images/music.jpg" id="profile">
+      <div>
+        <h2>LISTENING DUDE</h2>
+        <p>Listen your favourite music in our app</p>
+      </div>
+    <div class="search-bar">
+      <button>🔍</button>
+      <input type="text" placeholder="Search songs, artists...">
+    </div>
+    <span class="menu" onclick="toggleSidebar()">☰</span>
+    <div class="auth-button">
+      <a href="login.html"><button class="login-btn">Log in</button></a>
+      <a href="signup.html"><button class="signup-btn">Sign up</button></a>
+    </div>
+  </header>
+
+  <nav class="nav glass">
+        <button class="active">🏠 HOME</button>
+        <button>📂 LIBRARY</button>
+        <button>🎶 PLAYLIST</button>
+        <button>❤️ FAVORITES</button>
+  </nav>
+
+
+  <aside class="sidebar" id="sidebar">
+    <button class="close-btn" onclick="closeSidebar()">✖</button>
+    <h2>MENU</h2>
+        <button>PROFILE</button><br><br>
+        <hr><br><br>
+        <button>➕ Create Playlist</button><br>
+        <button>❤️ Liked Songs</button><br><br>
+        <hr><br><br>
+        <button>SETTINGS</button><br>
+        <button>HELP</button><br>
+        <button>LOGOUT</button>
+  </aside>
+
+  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+  
+  <main class="content">
+    
+    <section class="main-content glass">
+      <h3>New Launched</h3>
+      <div class="new-launched-grid">
+        <a href="#" class="box"><img src="images/o sajni re.jpg" alt="album"></a>
+        <a href="#" class="box"><img src="images/tere bina.jpg" alt="album"></a>
+        <a href="#" class="box"><img src="images/tujhe kitna chahne lage hum.jpg" alt="album"></a>
+        <a href="#" class="box"><img src="images/tum-tak.jpg" alt="zaroor"></a>
+        <a href="#" class="box"><img src="images/zaroor.jpg" alt="tum tak"></a>
+        <a href="#" class="box"><img src="images/powerhouse.jpg" alt="album"></a>
+        <a href="#" class="box"><img src="images/monica.jpg" alt="album"></a>
+        <a href="#" class="box"><img src="images/pardesiya.jpg" alt="album"></a>
+        <a href="#" class="box"><img src="images/o sajni re.jpg" alt="album"></a>
+        <a href="#" class="box"><img src="images/tere bina.jpg" alt="album"></a>
+        <a href="#" class="box"><img src="images/tujhe kitna chahne lage hum.jpg" alt="album"></a>
+        <a href="#" class="box"><img src="images/tum-tak.jpg" alt="zaroor"></a>
+        <a href="#" class="box"><img src="images/zaroor.jpg" alt="tum tak"></a>
+        <a href="#" class="box"><img src="images/powerhouse.jpg" alt="album"></a>
+        <a href="#" class="box"><img src="images/monica.jpg" alt="album"></a>
+        <a href="#" class="box"><img src="images/pardesiya.jpg" alt="album"></a>
+      </div>
+      </div>
+
+      <h3>Recent Played</h3>
+      <div class="grid">
+        <a href="#" class="box"><img src="images/golden sparrow.jpg" alt="album"></a>
+        <a href="#" class="box"><img src="images/ghar more pardesiya.jpg" alt="album"></a>
+        <a href="#" class="box"><img src="images/jugrafiya.jpg" alt="album"></a>
+        <a href="#" class="box"><img src="images/madanmanjiri.jpg" alt="album"></a>
+        <a href="#" class="box"><img src="images/o rangrez.jpg" alt="album"></a>
+        <a href="#" class="box"><img src="images/pardesiya.jpg" alt="album"></a>
+        <a href="#" class="box"><img src="images/finding her.jpg" alt="album"></a>
+        <a href="#" class="box"><img src="images/sapphire.jpg" alt="album"></a>
+      </div>
+    </section>
+
+    
+    <aside class="right-panel glass">
+      <h3>Now Playing</h3>
+      <div class="now-playing">
+        <img src="images/kedarnath.jpg" alt="Now Playing">
+        <h4>Namo Namo</h4>
+        <p>Amit Trivedi</p>
+        <div class="progress-bar neon">
+          <div class="progress"></div>
+        </div>
+        <p class="time">01:24 / 04:05</p>
+      </div>
+    </aside>
+
+  </main>
+
+  <footer class="bottom-player glass">
+    <div class="play-btn">▶</div>
+    <div class="progress-bar full neon">
+      <div class="progress"></div>
+    </div>
+    <input type="range" class="volume" min="0" max="100">
+  </footer>
+  <script src="script.js"></script>
+
+</body>
+</html>
+
