@@ -1,0 +1,13 @@
+# Ignore music files
+*.mp3
+*.wav
+
+# Ignore videos
+*.mp4
+
+# Ignore large folders
+Music/*
+!Music/Zaroor.mp3
+!Music/Sapphire.mp3
+!Music/Tere_pyar_mai.mp3
+*.zip
