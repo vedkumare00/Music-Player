@@ -8,6 +8,8 @@ let playlists = [];
 let currentSongIndex = 0;
 let isPlaying = false;
 let isPlaylistMode = false; // Track if we're playing from a playlist
+let currentDisplayedSongs = []; // The exact list currently rendered in .track-list (recent, all, or sliced)
+let currentSongId = null; // The ID of the song actually playing/loaded — survives page navigation even when index doesn't
 
 // Get elements
 const audioPlayer = new Audio();
@@ -23,7 +25,7 @@ const songArtist = document.querySelector('.player-info .song-artist');
 
 // Get active song list (playlist or all songs)
 function getActiveSongList() {
-    return isPlaylistMode && currentPlaylistSongs.length > 0 ? currentPlaylistSongs : songs;
+    return isPlaylistMode && currentPlaylistSongs.length > 0 ? currentPlaylistSongs : currentDisplayedSongs;
 }
 
 // Track recently played songs
@@ -46,10 +48,9 @@ function getRecentlyPlayedSongs() {
 // Save player state to sessionStorage
 function savePlayerState() {
     const state = {
-        currentSongIndex: currentSongIndex,
+        currentSongId: currentSongId,
         isPlaying: isPlaying,
         currentTime: audioPlayer.currentTime,
-        songs: songs,
         isPlaylistMode: isPlaylistMode,
         currentPlaylistSongs: currentPlaylistSongs
     };
@@ -61,20 +62,42 @@ function loadPlayerState() {
     const savedState = sessionStorage.getItem('playerState');
     if (savedState) {
         const state = JSON.parse(savedState);
-        songs = state.songs || [];
         currentPlaylistSongs = state.currentPlaylistSongs || [];
         isPlaylistMode = state.isPlaylistMode || false;
-        currentSongIndex = state.currentSongIndex || 0;
         isPlaying = state.isPlaying || false;
-        
+        const savedSongId = state.currentSongId;
+
+        if (savedSongId == null) return;
+
+        // First try to find the playing song within THIS page's active list,
+        // so next/prev and highlighting behave correctly if it's there.
         const activeSongs = getActiveSongList();
-        if (activeSongs.length > 0 && currentSongIndex < activeSongs.length) {
-            loadSong(currentSongIndex, false);
+        const idxInActiveList = activeSongs.findIndex(s => s.id === savedSongId);
+
+        if (idxInActiveList !== -1) {
+            loadSong(idxInActiveList, false);
             audioPlayer.currentTime = state.currentTime || 0;
-            
-            if (isPlaying) {
-                setTimeout(() => play(), 100);
+            if (isPlaying) setTimeout(() => play(), 100);
+            return;
+        }
+
+        // Song isn't part of this page's displayed list (e.g. played from
+        // Recently Played on home, now on Playlist page). Still show/resume
+        // the correct song using the full catalog — just without a valid
+        // index into this page's list, so next/prev won't apply until the
+        // user picks something from what's actually shown here.
+        const song = songs.find(s => s.id === savedSongId);
+        if (song) {
+            currentSongIndex = -1;
+            currentSongId = song.id;
+            songTitle.textContent = song.title;
+            songArtist.textContent = song.artist;
+            if (song.filePath) {
+                audioPlayer.src = `${API_BASE}/audio/stream/${song.filePath}`;
             }
+            audioPlayer.currentTime = state.currentTime || 0;
+            updateTrackHighlight();
+            if (isPlaying) setTimeout(() => play(), 100);
         }
     }
 }
@@ -261,6 +284,8 @@ function renderTracks(songsToRender = songs) {
     const trackList = document.querySelector('.track-list');
     if (!trackList) return;
     
+    currentDisplayedSongs = songsToRender;
+    
     trackList.innerHTML = '';
     
     songsToRender.forEach((song, index) => {
@@ -301,6 +326,7 @@ function loadSong(index, autoSave = true) {
     
     currentSongIndex = index;
     const song = activeSongs[currentSongIndex];
+    currentSongId = song.id;
     
     songTitle.textContent = song.title;
     songArtist.textContent = song.artist;
@@ -329,10 +355,9 @@ function play() {
             savePlayerState();
             
             // Track this as recently played
-            const activeSongs = getActiveSongList();
-            if (activeSongs[currentSongIndex]) {
-                addToRecentlyPlayed(activeSongs[currentSongIndex].id);
-                console.log('Added to recently played:', activeSongs[currentSongIndex].title);
+            if (currentSongId != null) {
+                addToRecentlyPlayed(currentSongId);
+                console.log('Added to recently played:', songTitle.textContent);
             }
         })
         .catch(error => {
